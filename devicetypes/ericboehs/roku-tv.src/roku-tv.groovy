@@ -8,30 +8,44 @@ metadata {
     capability "Switch"
     capability "Polling"
     capability "Refresh"
-    command "volume_up"
+    command "home"
+    command "back"
+    command "select"
     command "up"
     command "down"
+    command "left"
+    command "right"
+    command "volume_up"
     command "volume_down"
     command "volume_mute"
     command "netflix"
-    command "disneyjr"
+    command "plex"
     command "hdmi1"
     command "hdmi2"
     command "hdmi3"
-    command "hdmi4"
+    command "cvbs"
+    command "antenna"
   }
 
   simulator {
   }
 
   tiles {
-    standardTile("button", "device.switch", width: 2, height: 2, canChangeIcon: true) {
-      state "off", label: 'Off', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState: "on"
+    standardTile("button", "device.switch", width: 1, height: 1, canChangeIcon: true) {
+      state "off", label: 'Off', action: "switch.on", icon: "sst.switches.switch.off", backgroundColor: "#ffffff", nextState: "on"
       state "on", label: 'On', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#79b821", nextState: "off"
     }
 
     standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat") {
-      state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
+      state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh-icon"
+    }
+
+	standardTile("home", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"Home", action:"home", icon:"https://static.helpjuice.com/helpjuice_production/uploads/upload/image/2771/114109/home1600.png"
+    }
+    
+    	standardTile("back", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"Back", action:"back", icon:"https://cdn4.iconfinder.com/data/icons/layout-control-icons/100/14-512.png"
     }
 
 	standardTile("up", "device.switch", inactiveLabel: false, decoration: "flat") {
@@ -40,6 +54,18 @@ metadata {
     
     	standardTile("down", "device.switch", inactiveLabel: false, decoration: "flat") {
       state "default", label:"Down", action:"down", icon:"st.thermostat.thermostat-down"
+    }
+    
+    	standardTile("left", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"Left", action:"left", icon:"st.thermostat.thermostat-left"
+    }
+    
+    	standardTile("right", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"Right", action:"right", icon:"st.thermostat.thermostat-right"
+    }
+    
+      	standardTile("select", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"OK", action:"select", icon:"st.illuminance.illuminance.dark"
     }
     
     standardTile("volume_up", "device.switch", inactiveLabel: false, decoration: "flat") {
@@ -55,11 +81,11 @@ metadata {
     }
 
     standardTile("netflix", "device.switch", inactiveLabel: false, decoration: "flat") {
-      state "default", label:"Netflix", action:"netflix", icon:"st.Electronics.electronics12"
+      state "default", label:"Netflix", action:"netflix", icon:"http://icons.iconarchive.com/icons/stalker018/mmii-flat-vol-2/128/netflix-icon.png"
     }
 
-    standardTile("disneyjr", "device.switch", inactiveLabel: false, decoration: "flat") {
-      state "default", label:"Disney Jr.", action:"disneyjr", icon:"st.Electronics.electronics12"
+    standardTile("plex", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"Plex", action:"plex", icon:"https://wiki.mrmc.tv/images/c/cf/Plex_icon.png"
     }
 
     standardTile("hdmi1", "device.switch", inactiveLabel: false, decoration: "flat") {
@@ -74,12 +100,16 @@ metadata {
       state "default", label:"HDMI 3", action:"hdmi3", icon:"st.Electronics.electronics12"
     }
 
-    standardTile("hdmi4", "device.switch", inactiveLabel: false, decoration: "flat") {
-      state "default", label:"HDMI 4", action:"hdmi4", icon:"st.Electronics.electronics12"
+    standardTile("cvbs", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"AV", action:"cvbs", icon:"st.Electronics.electronics12"
+    }
+    
+        standardTile("antenna", "device.switch", inactiveLabel: false, decoration: "flat") {
+      state "default", label:"Antenna", action:"antenna", icon:"st.Electronics.electronics12"
     }
 
     main "button"
-    details(["button", "refresh", "volume_mute", "up", "down", "volume_down", "volume_up", "hdmi1", "hdmi2", "hdmi3", "hdmi4", "netflix", "disneyjr"])
+    details(["back", "button", "home", "volume_down", "up", "volume_up", "left", "select",  "right", "netflix",  "down", "plex", "hdmi1", "hdmi2", "hdmi3", "cvbs", "antenna", "refresh","volume_mute",])
   }
 }
 
@@ -95,7 +125,6 @@ def updated() {
 
 def parse(String description) {
   def msg = parseLanMessage(description)
-
   if (msg.body && msg.body.contains("PowerOn")) {
     sendEvent(name: "switch", value: "on")
   }
@@ -119,6 +148,15 @@ def off() {
   keypress('PowerOff')
 }
 
+def home() {
+  keypress('Home')
+}
+
+def back() {
+  keypress('Back')
+}
+
+
 def up() {
   keypress('Up')
 }
@@ -127,6 +165,17 @@ def down() {
   keypress('Down')
 }
 
+def left() {
+  keypress('Left')
+}
+
+def right() {
+  keypress('Right')
+}
+
+def select() {
+  keypress('Select')
+}
 
 def volume_up() {
   keypress('VolumeUp')
@@ -144,8 +193,13 @@ def netflix() {
   launchApp('12')
 }
 
-def disneyjr() {
-  launchApp('34278')
+def plex() {
+  launchApp('13535')
+}
+
+
+def antenna() {
+  keypress('InputTuner')
 }
 
 def hdmi1() {
@@ -160,8 +214,8 @@ def hdmi3() {
   keypress('InputHDMI3')
 }
 
-def hdmi4() {
-  keypress('InputHDMI4')
+def cvbs() {
+  keypress('InputAV1')
 }
 
 def poll() {
@@ -176,7 +230,7 @@ def refresh() {
 
 def queryDeviceState() {
   sendEvent(name: "switch", value: "off")
-  sendHubCommand(new physicalgraph.device.HubAction(
+  sendHubCommand( new physicalgraph.device.HubAction(
     method: "GET",
     path: "/query/device-info",
     headers: [ HOST: "${deviceIp}:8060" ]
